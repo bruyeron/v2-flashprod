@@ -6,7 +6,7 @@ import { parseDate, shortDate, getDayLabel, formatMonth, fmtNum, fmtPct, fmtSec,
 
 function ToggleBtn({ collapsed, onClick, dark }) {
   return (
-    <button onClick={onClick} className={`w-[17px] h-[17px] rounded text-[10px] font-bold flex-shrink-0 flex items-center justify-center border cursor-pointer transition-colors ${dark ? "bg-white/10 border-white/30 text-white/70 hover:border-blue-400 hover:text-blue-400" : "bg-white/70 border-slate-400 text-slate-500 hover:border-blue-500 hover:text-blue-500 hover:bg-blue-50"}`}>
+    <button onClick={onClick} className={`w-[17px] h-[17px] rounded text-[10px] font-bold flex-shrink-0 flex items-center justify-center border cursor-pointer transition-colors ${dark ? "bg-white/10 border-white/30 text-white/70 hover:border-blue-400 hover:text-blue-400" : "bg-white/70 border-slate-400 text-slate-500 hover:border-[#096475] hover:text-blue-500 hover:bg-blue-50"}`}>
       {collapsed ? "+" : "−"}
     </button>
   );
@@ -77,7 +77,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
 
       if (collapseState["m:" + m]) {
         return (
-          <td key={m} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[10px] font-bold min-w-[72px] ${moBg}`}>
+          <td key={m} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-[#096475] text-[10px] font-bold min-w-[72px] ${moBg}`}>
             {renderCell(mVal, row)}
           </td>
         );
@@ -102,7 +102,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
             </td>,
           ];
         }),
-        <td key={m + "-mt"} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[10px] font-bold min-w-[72px] ${moBg}`}>
+        <td key={m + "-mt"} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-[#096475] text-[10px] font-bold min-w-[72px] ${moBg}`}>
           {renderCell(mVal, row)}
         </td>,
       ];
@@ -120,7 +120,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
             <th rowSpan={3} className={`sticky left-0 z-[60] min-w-[215px] max-w-[215px] ${bgH} border-b border-r ${brd} text-left px-2.5 py-1.5 text-[10px] font-semibold tracking-widest ${txtMuted}`}>INDICATEUR</th>
             <th rowSpan={3} className={`sticky left-[215px] z-[60] min-w-[110px] max-w-[110px] ${bgH} border-b border-r-2 ${brdS} text-center px-2.5 py-1.5 text-[10px] font-semibold tracking-wider ${txtMuted}`}>CODE</th>
             <th rowSpan={3} className={`sticky left-[325px] z-[60] min-w-[58px] ${bgH} border-b border-r ${brd} text-center px-2 py-1.5 text-[10px] font-semibold text-amber-600`}>MIN</th>
-            <th rowSpan={3} className={`sticky left-[383px] z-[60] min-w-[58px] ${bgH} border-b border-r-[3px] border-blue-500 text-center px-2 py-1.5 text-[10px] font-semibold text-green-600`}>MAX</th>
+            <th rowSpan={3} className={`sticky left-[383px] z-[60] min-w-[58px] ${bgH} border-b border-r-[3px] border-[#096475] text-center px-2 py-1.5 text-[10px] font-semibold text-green-600`}>MAX</th>
             {sortedMonths.map((m) => {
               const wks = Object.keys(monthWeekDay[m]).sort();
               let span = 1;
@@ -128,7 +128,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
                 wks.forEach((w) => { if (!collapseState["w:" + m + ":" + w]) span += monthWeekDay[m][w].length; span += 1; });
               }
               return (
-                <th key={m} colSpan={span} className="bg-blue-600 text-white text-[11px] font-bold border-b border-r border-blue-500 px-2 py-1">
+                <th key={m} colSpan={span} className="bg-[#00afa9] text-white text-[11px] font-bold border-b border-r border-[#096475] px-2 py-1">
                   <div className="flex items-center justify-center gap-1.5">
                     <ToggleBtn collapsed={!!collapseState["m:" + m]} onClick={() => onToggle("m:" + m)} dark={true} />
                     {formatMonth(m)}
@@ -143,7 +143,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
             {sortedMonths.map((m) => {
               if (collapseState["m:" + m]) {
                 return (
-                  <th key={m} rowSpan={2} className={`min-w-[72px] ${moBg} border-b border-r-[3px] border-blue-500 text-[10px] font-bold text-blue-600 px-2 py-1`}>
+                  <th key={m} rowSpan={2} className={`min-w-[72px] ${moBg} border-b border-r-[3px] border-[blue-500] text-[10px] font-bold text-blue-600 px-2 py-1`}>
                     <div className="flex flex-col items-center gap-0.5"><span className="font-bold">Total</span><span className="font-normal">{formatMonth(m)}</span></div>
                   </th>
                 );
@@ -161,7 +161,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
                     </th>
                   );
                 }),
-                <th key={m + "-total"} rowSpan={2} className={`min-w-[72px] ${moBg} border-b border-r-[3px] border-blue-500 text-[10px] font-bold text-blue-600 px-2 py-1`}>
+                <th key={m + "-total"} rowSpan={2} className={`min-w-[72px] ${moBg} border-b border-r-[3px] border-[#096475] text-[10px] font-bold text-blue-600 px-2 py-1`}>
                   <div className="flex flex-col items-center gap-0.5"><span className="font-bold">Total</span><span className="font-normal">{formatMonth(m)}</span></div>
                 </th>,
               ];
@@ -203,7 +203,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
               const totalCols = 4 + countCols();
               return (
                 <tr key={ri} className={dark ? "bg-[#1c2433] hover:bg-[#1c2d50]" : "bg-blue-50/70 hover:bg-blue-100"}>
-                  <td colSpan={totalCols} className={`px-2.5 py-1.5 text-[11px] font-bold tracking-widest uppercase border-b ${dark ? "text-blue-400 border-blue-900" : "text-blue-600 border-blue-200"}`}>
+                  <td colSpan={totalCols} className={`px-2.5 py-1.5 text-[11px] font-bold tracking-widest uppercase border-b ${dark ? "text-[#00afa9] border-blue-900" : "text-[#00afa9] border-blue-200"}`}>
                     {row.label}
                   </td>
                 </tr>
@@ -228,7 +228,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
                     : ""}
                 </td>
                 {/* RefMax */}
-                <td className={`sticky left-[383px] z-20 px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[10px] font-semibold text-green-600`} style={{ background: bg }}>
+                <td className={`sticky left-[383px] z-20 px-2 py-1.5 text-center border-b border-r-[3px] border-[#096475] text-[10px] font-semibold text-green-600`} style={{ background: bg }}>
                   {row.refMax !== undefined
                     ? (row.fmt === "second" ? fmtSec(row.refMax) : row.fmt === "decimal1" || row.fmt === "decimal2" ? fmtDecimal(row.refMax, 1) : fmtPct(row.refMax))
                     : ""}

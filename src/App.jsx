@@ -1,20 +1,20 @@
 import { useState, useCallback } from "react";
-import TopBar    from "./components/TopBar";
+import TopBar from "./components/TopBar";
 import EmptyState from "./components/EmptyState";
-import DataTable  from "./components/DataTable";
-import Legend     from "./components/Legend";
-import { parseCSV }   from "./utils/csvParser";
+import DataTable from "./components/DataTable";
+import Legend from "./components/Legend";
+import { parseCSV } from "./utils/csvParser";
 import { buildIndex } from "./utils/dataProcessor";
 
 export default function App() {
-  const [dark,          setDark]          = useState(false);
-  const [rawData,       setRawData]       = useState([]);
-  const [allGroups,     setAllGroups]     = useState([]);
+  const [dark, setDark] = useState(false);
+  const [rawData, setRawData] = useState([]);
+  const [allGroups, setAllGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState("");
   const [collapseState, setCollapseState] = useState({});
-  const [dataIdx,       setDataIdx]       = useState(null);
-  const [loading,       setLoading]       = useState(false);
-  const [statusMsg,     setStatusMsg]     = useState("Aucun fichier chargé");
+  const [dataIdx, setDataIdx] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [statusMsg, setStatusMsg] = useState("Aucun fichier chargé");
 
   const handleToggle = useCallback((key) => {
     setCollapseState((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -34,7 +34,7 @@ export default function App() {
       setTimeout(() => {
         const parsed = parseCSV(ev.target.result);
         const groups = [...new Set(parsed.map((r) => r.groupe_suivi).filter(Boolean))].sort();
-        const first  = groups.length > 0 ? groups[0] : "";
+        const first = groups.length > 0 ? groups[0] : "";
         setRawData(parsed);
         setAllGroups(groups);
         setSelectedGroup(first);

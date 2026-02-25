@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Sun, Moon, Upload } from 'lucide-react';
 
 export default function TopBar({ dark, onToggleTheme, allGroups, selectedGroup, onGroupChange, statusMsg, onFileLoad }) {
   const fileRef = useRef();
@@ -9,8 +10,14 @@ export default function TopBar({ dark, onToggleTheme, allGroups, selectedGroup, 
 
   return (
     <div className={`h-14 ${bg2} border-b-2 ${border} flex items-center px-5 gap-3.5 flex-shrink-0 z-[100] shadow-sm`}>
-      <div className="w-[34px] h-[34px] bg-blue-600 rounded-[9px] flex items-center justify-center text-white text-[17px] flex-shrink-0 select-none">⚡</div>
-      <span className={`font-bold text-[15px] tracking-tight ${text}`}>Flash Production</span>
+      <div className="w-[110px] h-[34px] rounded-[9px] mt-2 flex items-center justify-center overflow-hidden flex-shrink-0 select-none">
+        <img 
+          src="./src/assets/logo.png" 
+          alt="Logo" 
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <span className={`font-bold text-[18px] tracking-tight ${text}`}>Flash Production</span>
       <div className={`w-px h-[22px] ${dark ? "bg-slate-700" : "bg-slate-200"}`} />
       <span className={`text-[11px] font-medium ${muted}`}>Activité :</span>
       <select
@@ -25,17 +32,15 @@ export default function TopBar({ dark, onToggleTheme, allGroups, selectedGroup, 
       <div className="ml-auto flex items-center gap-2">
         <button
           onClick={onToggleTheme}
-          className={`w-9 h-9 rounded-lg border cursor-pointer flex items-center justify-center text-[16px] transition-all ${dark ? "bg-[#21262d] border-[#30363d] hover:border-blue-400 hover:bg-[#1c2d50]" : "bg-slate-100 border-slate-200 hover:border-blue-500 hover:bg-blue-50"}`}
+          className={`w-9 h-9 rounded-lg border cursor-pointer flex items-center justify-center text-[16px] transition-all ${dark ? "bg-[#21262d] border-[#096475] hover:border-[#096475] hover:bg-[#00afa9]" : "bg-slate-100 border-[#cce1e1] hover:border-[#096475] hover:bg-[#00afa9]"}`}
         >
-          {dark ? "☀️" : "🌙"}
+          {dark ? <Sun size={18} strokeWidth={2.5} /> : <Moon size={18} strokeWidth={2.5} />}
         </button>
         <button
           onClick={() => fileRef.current.click()}
-          className="bg-blue-600 hover:bg-blue-700 text-white border-none px-4 py-2 rounded-lg text-[12px] cursor-pointer font-semibold flex items-center gap-1.5 transition-colors"
+          className="bg-[#00afa9] hover:bg-[#096475] text-white border-[#808284] px-4 py-2 rounded-lg text-[12px] cursor-pointer font-semibold flex items-center gap-1.5 transition-colors shadow-sm active:scale-95"
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
+          <Upload size={14} strokeWidth={2.5} />
           Charger CSV
         </button>
         <input ref={fileRef} type="file" accept=".csv,.txt" className="hidden" onChange={(e) => { onFileLoad(e.target.files[0]); e.target.value = ""; }} />
