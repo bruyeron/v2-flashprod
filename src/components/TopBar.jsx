@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { Sun, Moon, Upload } from 'lucide-react';
+import logo from "../assets/logo.png";
 
 export default function TopBar({ dark, onToggleTheme, allGroups, selectedGroup, onGroupChange, statusMsg, onFileLoad }) {
   const fileRef = useRef();
@@ -12,7 +13,7 @@ export default function TopBar({ dark, onToggleTheme, allGroups, selectedGroup, 
     <div className={`h-14 ${bg2} border-b-2 ${border} flex items-center px-5 gap-3.5 flex-shrink-0 z-[100] shadow-sm`}>
       <div className="w-[110px] h-[34px] rounded-[9px] mt-2 flex items-center justify-center overflow-hidden flex-shrink-0 select-none">
         <img 
-          src="./src/assets/logo.png" 
+          src={logo} 
           alt="Logo" 
           className="w-full h-full object-cover"
         />

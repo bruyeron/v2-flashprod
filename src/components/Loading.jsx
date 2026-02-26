@@ -1,4 +1,3 @@
-import React from "react";
 
 export default function Loading({ dark, message = "En cours de chargement..." }) {
   return (
