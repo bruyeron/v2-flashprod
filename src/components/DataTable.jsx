@@ -31,7 +31,7 @@ function CellValue({ value, row, dark }) {
 
   const chipClass = getChipClass(value, row, dark);
   return (
-    <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-semibold leading-tight ${chipClass || ""}`}>
+    <span className={`inline-block px-1.5 py-0.5 rounded-full text-[12px] font-semibold leading-tight ${chipClass || ""}`}>
       {formatted}
     </span>
   );
@@ -77,7 +77,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
 
       if (collapseState["m:" + m]) {
         return (
-          <td key={m} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-[#096475] text-[10px] font-bold min-w-[72px] ${moBg}`}>
+          <td key={m} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-[#096475] text-[12px] font-bold min-w-[72px] ${moBg}`}>
             {renderCell(mVal, row)}
           </td>
         );
@@ -92,17 +92,17 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
           return [
             ...(!collapseState["w:" + m + ":" + w]
               ? wDates.map((dt) => (
-                  <td key={dt} className={`px-2 py-1.5 text-center border-b border-r ${brd} text-[10px] min-w-[72px] ${row.type === "kpi" ? "font-semibold" : "font-normal"}`}>
+                  <td key={dt} className={`px-2 py-1.5 text-center border-b border-r ${brd} text-[12px] min-w-[72px] ${row.type === "kpi" ? "font-semibold" : "font-normal"}`}>
                     {renderCell(row.formula(dateIndex[dt] || {}), row)}
                   </td>
                 ))
               : []),
-            <td key={w + "-wt"} className={`px-2 py-1.5 text-center border-b border-l border-r-2 ${brdS} text-[10px] font-bold min-w-[72px] ${wkBg}`}>
+            <td key={w + "-wt"} className={`px-2 py-1.5 text-center border-b border-l border-r-2 ${brdS} text-[12px] font-bold min-w-[72px] ${wkBg}`}>
               {renderCell(wVal, row)}
             </td>,
           ];
         }),
-        <td key={m + "-mt"} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-[#096475] text-[10px] font-bold min-w-[72px] ${moBg}`}>
+        <td key={m + "-mt"} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-[#096475] text-[12px] font-bold min-w-[72px] ${moBg}`}>
           {renderCell(mVal, row)}
         </td>,
       ];
@@ -117,10 +117,10 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
 
           {/* Row 1 – months */}
           <tr>
-            <th rowSpan={3} className={`sticky left-0 z-[60] min-w-[215px] max-w-[215px] ${bgH} border-b border-r ${brd} text-left px-2.5 py-1.5 text-[10px] font-semibold tracking-widest ${txtMuted}`}>INDICATEUR</th>
-            <th rowSpan={3} className={`sticky left-[215px] z-[60] min-w-[110px] max-w-[110px] ${bgH} border-b border-r-2 ${brdS} text-center px-2.5 py-1.5 text-[10px] font-semibold tracking-wider ${txtMuted}`}>CODE</th>
-            <th rowSpan={3} className={`sticky left-[325px] z-[60] min-w-[58px] ${bgH} border-b border-r ${brd} text-center px-2 py-1.5 text-[10px] font-semibold text-amber-600`}>MIN</th>
-            <th rowSpan={3} className={`sticky left-[383px] z-[60] min-w-[58px] ${bgH} border-b border-r-[3px] border-[#096475] text-center px-2 py-1.5 text-[10px] font-semibold text-green-600`}>MAX</th>
+            <th rowSpan={3} className={`sticky left-0 z-[60] min-w-[215px] max-w-[215px] ${bgH} border-b border-r ${brd} text-left px-2.5 py-1.5 text-[16px] font-semibold tracking-widest ${txtMuted}`}>INDICATEUR</th>
+            <th rowSpan={3} className={`sticky left-[215px] z-[60] min-w-[110px] max-w-[110px] ${bgH} border-b border-r-2 ${brdS} text-center px-2.5 py-1.5 text-[16px] font-semibold tracking-wider ${txtMuted}`}>CODE</th>
+            <th rowSpan={3} className={`sticky left-[325px] z-[60] min-w-[58px] ${bgH} border-b border-r ${brd} text-center px-2 py-1.5 text-[14px] font-semibold text-amber-600`}>MIN</th>
+            <th rowSpan={3} className={`sticky left-[383px] z-[60] min-w-[58px] ${bgH} border-b border-r-[3px] border-[#096475] text-center px-2 py-1.5 text-[14px] font-semibold text-green-600`}>MAX</th>
             {sortedMonths.map((m) => {
               const wks = Object.keys(monthWeekDay[m]).sort();
               let span = 1;
@@ -203,7 +203,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
               const totalCols = 4 + countCols();
               return (
                 <tr key={ri} className={dark ? "bg-[#1c2433] hover:bg-[#1c2d50]" : "bg-blue-50/70 hover:bg-blue-100"}>
-                  <td colSpan={totalCols} className={`px-2.5 py-1.5 text-[11px] font-bold tracking-widest uppercase border-b ${dark ? "text-[#00afa9] border-blue-900" : "text-[#00afa9] border-blue-200"}`}>
+                  <td colSpan={totalCols} className={`px-2.5 py-1.5 text-[13px] font-bold tracking-widest uppercase border-b ${dark ? "text-[#00afa9] border-blue-900" : "text-[#00afa9] border-blue-200"}`}>
                     {row.label}
                   </td>
                 </tr>
@@ -214,21 +214,21 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
             return (
               <tr key={ri} className={`group ${hov}`} style={{ background: bg }}>
                 {/* Label */}
-                <td className={`sticky left-0 z-20 px-2.5 py-1.5 text-left border-b border-r ${brd} text-[12px] ${isKpi ? `font-semibold pl-3.5 ${txt}` : `font-normal pl-6 ${txtMuted}`}`} style={{ background: bg }}>
+                <td className={`sticky left-0 z-20 px-2.5 py-1.5 text-left border-b border-r ${brd} text-[13px] ${isKpi ? `font-semibold pl-3.5 ${txt}` : `font-normal pl-6 ${txtMuted}`}`} style={{ background: bg }}>
                   {row.label}
                 </td>
                 {/* Code */}
-                <td className={`sticky left-[215px] z-20 px-2.5 py-1.5 text-left border-b border-r-2 ${brdS} text-[10px] ${txtMuted}`} style={{ background: bg }}>
+                <td className={`sticky left-[215px] z-20 px-2.5 py-1.5 text-left border-b border-r-2 ${brdS} text-[12px] ${txtMuted}`} style={{ background: bg }}>
                   {row.code || ""}
                 </td>
                 {/* RefMin */}
-                <td className={`sticky left-[325px] z-20 px-2 py-1.5 text-center border-b border-r ${brd} text-[10px] font-semibold text-amber-600`} style={{ background: bg }}>
+                <td className={`sticky left-[325px] z-20 px-2 py-1.5 text-center border-b border-r ${brd} text-[12px] font-semibold text-amber-600`} style={{ background: bg }}>
                   {row.refMin !== undefined
                     ? (row.fmt === "second" ? fmtSec(row.refMin) : row.fmt === "decimal1" || row.fmt === "decimal2" ? fmtDecimal(row.refMin, 1) : fmtPct(row.refMin))
                     : ""}
                 </td>
                 {/* RefMax */}
-                <td className={`sticky left-[383px] z-20 px-2 py-1.5 text-center border-b border-r-[3px] border-[#096475] text-[10px] font-semibold text-green-600`} style={{ background: bg }}>
+                <td className={`sticky left-[383px] z-20 px-2 py-1.5 text-center border-b border-r-[3px] border-[#096475] text-[12px] font-semibold text-green-600`} style={{ background: bg }}>
                   {row.refMax !== undefined
                     ? (row.fmt === "second" ? fmtSec(row.refMax) : row.fmt === "decimal1" || row.fmt === "decimal2" ? fmtDecimal(row.refMax, 1) : fmtPct(row.refMax))
                     : ""}

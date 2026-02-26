@@ -1,33 +1,33 @@
 import { v, pct } from "../utils/helpers";
 
 // ─── shortcuts ───────────────────────────────
-const inc  = (attr) => (d) => v(d, "incoming", attr);
+const inc = (attr) => (d) => v(d, "incoming", attr);
 const prev = (attr) => (d) => v(d, "prev", attr);
 const isol = (attr) => (d) => v(d, "isol", attr);
-const rd   = (attr) => (d) => v(d, "rd", attr);
-const h21  = (attr) => (d) => v(d, "Yas_21-6h", attr);   // tranche 21h-6h
-const h7   = (attr) => (d) => v(d, "Yas_7-21h", attr);   // tranche 7h-21h
-const p21  = (attr) => (d) => v(d, "prev_yas_21-6h", attr);
-const p7   = (attr) => (d) => v(d, "prev_yas_7-21h", attr);
+const rd = (attr) => (d) => v(d, "rd", attr);
+const h21 = (attr) => (d) => v(d, "Yas_21-6h", attr);   // tranche 21h-6h
+const h7 = (attr) => (d) => v(d, "Yas_7-21h", attr);   // tranche 7h-21h
+const p21 = (attr) => (d) => v(d, "prev_yas_21-6h", attr);
+const p7 = (attr) => (d) => v(d, "prev_yas_7-21h", attr);
 
 // ─── duration helpers ────────────────────────
 // Durations stored as seconds in the aggregated index
 const durSec = (src, attr) => (d) => v(d, src, attr); // raw seconds
-const hLog   = (d) => {
+const hLog = (d) => {
   // Heures loguées = sum of all rd durations (total in-chair time)
-  const rdKeys = ["Appel entrant","Appel manuel","Appel sortant","E-Mail",
-    "Mode recherche","Numérotation","Post-travail","Traitement BO",
-    "Brief","Calibrage","Débriefe après paralleling","Individual Coaching",
-    "Point avec le DO","Sharing time","Supervision","Formation",
-    "Aucun contexte démarré","Consultation","Ostie","Pause","Attente"];
+  const rdKeys = ["Appel entrant", "Appel manuel", "Appel sortant", "E-Mail",
+    "Mode recherche", "Numérotation", "Post-travail", "Traitement BO",
+    "Brief", "Calibrage", "Débriefe après paralleling", "Individual Coaching",
+    "Point avec le DO", "Sharing time", "Supervision", "Formation",
+    "Aucun contexte démarré", "Consultation", "Ostie", "Pause", "Attente"];
   let sum = 0;
   rdKeys.forEach(k => { const val = v(d, "rd", k); if (val) sum += val; });
   return sum || null;
 };
 const hProd = (d) => {
   // Heures productives = Traitement
-  const keys = ["Appel entrant","Appel manuel","Appel sortant","E-Mail",
-    "Mode recherche","Numérotation","Post-travail","Traitement BO"];
+  const keys = ["Appel entrant", "Appel manuel", "Appel sortant", "E-Mail",
+    "Mode recherche", "Numérotation", "Post-travail", "Traitement BO"];
   let sum = 0;
   keys.forEach(k => { const val = v(d, "rd", k); if (val) sum += val; });
   return sum || null;
@@ -54,32 +54,32 @@ export const ROW_DEFS = [
   // 1. PRÉVISIONS
   // ══════════════════════════════════════════
   { type: "section", label: "Prévisions" },
-  { type: "sub", label: "Prévisions",  code: "prevision",  formula: prev("prevision"),  fmt: "number" },
-  { type: "sub", label: "Reforecast",  code: "reforecast", formula: prev("reforecast"), fmt: "number" },
+  { type: "sub", label: "Prévisions", code: "prevision", formula: prev("prevision"), fmt: "number" },
+  { type: "sub", label: "Reforecast", code: "reforecast", formula: prev("reforecast"), fmt: "number" },
 
   // ══════════════════════════════════════════
   // 2. VOLUMÉTRIE
   // ══════════════════════════════════════════
   { type: "section", label: "Volumétrie" },
-  { type: "sub", label: "Reçus",                 code: "recu",       formula: inc("recu"),    fmt: "number" },
-  { type: "kpi", label: "% TRP vs Prévisions",   code: "%trp_prev",  formula: (d) => pct(v(d,"incoming","recu"), v(d,"prev","prevision")),   fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
-  { type: "kpi", label: "% TRP vs Reforecast",   code: "%trp_ref",   formula: (d) => pct(v(d,"incoming","recu"), v(d,"prev","reforecast")),  fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
-  { type: "sub", label: "Traités",                code: "traite",     formula: inc("traite"),  fmt: "number" },
-  { type: "kpi", label: "% QS",                   code: "%qs",        formula: (d) => pct(v(d,"incoming","traite"), v(d,"incoming","recu")),  fmt: "percent", refMax: 0.90, colorMode: "min", refMin: 0.90 },
-  { type: "sub", label: "Traité SL < 20 sec",     code: "traite_sl",  formula: inc("traite_sl"), fmt: "number" },
-  { type: "kpi", label: "% SL",                   code: "%sl",        formula: (d) => pct(v(d,"incoming","traite_sl"), v(d,"incoming","traite")), fmt: "percent", refMin: 0.80, colorMode: "min" },
-  { type: "sub", label: "Appels transférés",       code: "transfert",  formula: inc("transfert"), fmt: "number" },
-  { type: "kpi", label: "% Transfert",            code: "%transfert", formula: (d) => pct(v(d,"incoming","transfert"), v(d,"incoming","recu")),  fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
-  { type: "sub", label: "Raccrochés par agent",   code: "racc",       formula: inc("raccrochage"), fmt: "number" },
-  { type: "kpi", label: "% Raccrochage",          code: "%racc",      formula: (d) => pct(v(d,"incoming","raccrochage"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Reçus", code: "recu", formula: inc("recu"), fmt: "number" },
+  { type: "kpi", label: "% TRP vs Prévisions", code: "%trp_prev", formula: (d) => pct(v(d, "incoming", "recu"), v(d, "prev", "prevision")), fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
+  { type: "kpi", label: "% TRP vs Reforecast", code: "%trp_ref", formula: (d) => pct(v(d, "incoming", "recu"), v(d, "prev", "reforecast")), fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
+  { type: "sub", label: "Traités", code: "traite", formula: inc("traite"), fmt: "number" },
+  { type: "kpi", label: "% QS", code: "%qs", formula: (d) => pct(v(d, "incoming", "traite"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.90, colorMode: "min", refMin: 0.90 },
+  { type: "sub", label: "Traité SL < 20 sec", code: "traite_sl", formula: inc("traite_sl"), fmt: "number" },
+  { type: "kpi", label: "% SL", code: "%sl", formula: (d) => pct(v(d, "incoming", "traite_sl"), v(d, "incoming", "traite")), fmt: "percent", refMin: 0.80, colorMode: "min" },
+  { type: "sub", label: "Appels transférés", code: "transfert", formula: inc("transfert"), fmt: "number" },
+  { type: "kpi", label: "% Transfert", code: "%transfert", formula: (d) => pct(v(d, "incoming", "transfert"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Raccrochés par agent", code: "racc", formula: inc("raccrochage"), fmt: "number" },
+  { type: "kpi", label: "% Raccrochage", code: "%racc", formula: (d) => pct(v(d, "incoming", "raccrochage"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
 
   // ══════════════════════════════════════════
   // 3. SL RÉVISÉ
   // ══════════════════════════════════════════
   { type: "section", label: "SL révisé à TRP 110% (calcul par tranche de 30min)" },
-  { type: "sub", label: "Traités (isolé)",         code: "traite_isol",    formula: isol("traite_isol"),    fmt: "number" },
-  { type: "sub", label: "Traité SL (isolé)",       code: "traite_sl_isol", formula: isol("traite_sl_isol"), fmt: "number" },
-  { type: "kpi", label: "% SL révisé à TRP 110%", code: "%sl_isol",       formula: (d) => pct(v(d,"isol","traite_sl_isol"), v(d,"isol","traite_isol")), fmt: "percent", refMin: 0.80, colorMode: "min" },
+  { type: "sub", label: "Traités (isolé)", code: "traite_isol", formula: isol("traite_isol"), fmt: "number" },
+  { type: "sub", label: "Traité SL (isolé)", code: "traite_sl_isol", formula: isol("traite_sl_isol"), fmt: "number" },
+  { type: "kpi", label: "% SL révisé à TRP 110%", code: "%sl_isol", formula: (d) => pct(v(d, "isol", "traite_sl_isol"), v(d, "isol", "traite_isol")), fmt: "percent", refMin: 0.80, colorMode: "min" },
 
   // ══════════════════════════════════════════
   // 4. RÉPARTITION PAR FILE (dynamique)
@@ -90,9 +90,9 @@ export const ROW_DEFS = [
   // 5. DURÉE DE TRAITEMENT
   // ══════════════════════════════════════════
   { type: "section", label: "Durée de traitement" },
-  { type: "sub", label: "Durée totale de comm",         code: "duree_com",  formula: inc("duree_com"),  fmt: "duration" },
-  { type: "sub", label: "Durée total post-travail",     code: "duree_acw",  formula: inc("duree_acw"),  fmt: "duration" },
-  { type: "sub", label: "Durée de mise en attente",     code: "en_attente", formula: rd("En attente"),  fmt: "duration" },
+  { type: "sub", label: "Durée totale de comm", code: "duree_com", formula: inc("duree_com"), fmt: "duration" },
+  { type: "sub", label: "Durée total post-travail", code: "duree_acw", formula: inc("duree_acw"), fmt: "duration" },
+  { type: "sub", label: "Durée de mise en attente", code: "en_attente", formula: rd("En attente"), fmt: "duration" },
   {
     type: "kpi", label: "Productivité / Heures loguées", code: "prod_hl",
     formula: (d) => {
@@ -146,38 +146,38 @@ export const ROW_DEFS = [
   // 6. APPELS COURTS
   // ══════════════════════════════════════════
   { type: "section", label: "Appels courts" },
-  { type: "sub", label: "Appels courts < 10 sec",       code: "appel_10s", formula: inc("appel_moins_10s"), fmt: "number" },
-  { type: "kpi", label: "% Appels courts < 10 sec",     code: "%a10",      formula: (d) => pct(v(d,"incoming","appel_moins_10s"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
-  { type: "sub", label: "Appels courts < 15 sec",       code: "appel_15s", formula: inc("appel_moins_15s"), fmt: "number" },
-  { type: "kpi", label: "% Appels courts < 15 sec",     code: "%a15",      formula: (d) => pct(v(d,"incoming","appel_moins_15s"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.075, colorMode: "max_inv" },
-  { type: "sub", label: "Appels courts < 50 sec",       code: "appel_50s", formula: inc("appel_moins_50s"), fmt: "number" },
-  { type: "kpi", label: "% Appels courts < 50 sec",     code: "%a50",      formula: (d) => pct(v(d,"incoming","appel_moins_50s"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.25, colorMode: "max_inv" },
+  { type: "sub", label: "Appels courts < 10 sec", code: "appel_10s", formula: inc("appel_moins_10s"), fmt: "number" },
+  { type: "kpi", label: "% Appels courts < 10 sec", code: "%a10", formula: (d) => pct(v(d, "incoming", "appel_moins_10s"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Appels courts < 15 sec", code: "appel_15s", formula: inc("appel_moins_15s"), fmt: "number" },
+  { type: "kpi", label: "% Appels courts < 15 sec", code: "%a15", formula: (d) => pct(v(d, "incoming", "appel_moins_15s"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.075, colorMode: "max_inv" },
+  { type: "sub", label: "Appels courts < 50 sec", code: "appel_50s", formula: inc("appel_moins_50s"), fmt: "number" },
+  { type: "kpi", label: "% Appels courts < 50 sec", code: "%a50", formula: (d) => pct(v(d, "incoming", "appel_moins_50s"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.25, colorMode: "max_inv" },
 
   // ══════════════════════════════════════════
   // 7. RÉITÉRATION MÊME TYPO
   // ══════════════════════════════════════════
   { type: "section", label: "Réitération même typologie" },
-  { type: "sub", label: "Réitération 1h",               code: "reit_1h_t",   formula: inc("reit_typo_1h"),       fmt: "number" },
-  { type: "kpi", label: "% Réitération 1h",             code: "%reit_1h_t",  formula: (d) => pct(v(d,"incoming","reit_typo_1h"), v(d,"incoming","recu")),       fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 1j",               code: "reit_24h_t",  formula: inc("reit_typo_24h"),      fmt: "number" },
-  { type: "kpi", label: "% Réitération 1j",             code: "%reit_24h_t", formula: (d) => pct(v(d,"incoming","reit_typo_24h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 3j",               code: "reit_72h_t",  formula: inc("reit_typo_72h"),      fmt: "number" },
-  { type: "kpi", label: "% Réitération 3j",             code: "%reit_72h_t", formula: (d) => pct(v(d,"incoming","reit_typo_72h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 7j",               code: "reit_sem_t",  formula: inc("reit_typo_semaine"),  fmt: "number" },
-  { type: "kpi", label: "% Réitération 7j",             code: "%reit_sem_t", formula: (d) => pct(v(d,"incoming","reit_typo_semaine"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1h", code: "reit_1h_t", formula: inc("reit_typo_1h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 1h", code: "%reit_1h_t", formula: (d) => pct(v(d, "incoming", "reit_typo_1h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1j", code: "reit_24h_t", formula: inc("reit_typo_24h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 1j", code: "%reit_24h_t", formula: (d) => pct(v(d, "incoming", "reit_typo_24h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 3j", code: "reit_72h_t", formula: inc("reit_typo_72h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 3j", code: "%reit_72h_t", formula: (d) => pct(v(d, "incoming", "reit_typo_72h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 7j", code: "reit_sem_t", formula: inc("reit_typo_semaine"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 7j", code: "%reit_sem_t", formula: (d) => pct(v(d, "incoming", "reit_typo_semaine"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
 
   // ══════════════════════════════════════════
   // 8. RÉITÉRATION SANS TYPO
   // ══════════════════════════════════════════
   { type: "section", label: "Réitération sans distinction typologie" },
-  { type: "sub", label: "Réitération 1h",               code: "reit_1h",   formula: inc("reit_1h"),       fmt: "number" },
-  { type: "kpi", label: "% Réitération 1h",             code: "%reit_1h",  formula: (d) => pct(v(d,"incoming","reit_1h"), v(d,"incoming","recu")),       fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 1j",               code: "reit_24h",  formula: inc("reit_24h"),      fmt: "number" },
-  { type: "kpi", label: "% Réitération 1j",             code: "%reit_24h", formula: (d) => pct(v(d,"incoming","reit_24h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 3j",               code: "reit_72h",  formula: inc("reit_72h"),      fmt: "number" },
-  { type: "kpi", label: "% Réitération 3j",             code: "%reit_72h", formula: (d) => pct(v(d,"incoming","reit_72h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 7j",               code: "reit_sem",  formula: inc("reit_semaine"),  fmt: "number" },
-  { type: "kpi", label: "% Réitération 7j",             code: "%reit_sem", formula: (d) => pct(v(d,"incoming","reit_semaine"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1h", code: "reit_1h", formula: inc("reit_1h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 1h", code: "%reit_1h", formula: (d) => pct(v(d, "incoming", "reit_1h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1j", code: "reit_24h", formula: inc("reit_24h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 1j", code: "%reit_24h", formula: (d) => pct(v(d, "incoming", "reit_24h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 3j", code: "reit_72h", formula: inc("reit_72h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 3j", code: "%reit_72h", formula: (d) => pct(v(d, "incoming", "reit_72h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 7j", code: "reit_sem", formula: inc("reit_semaine"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 7j", code: "%reit_sem", formula: (d) => pct(v(d, "incoming", "reit_semaine"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
   {
     type: "kpi", label: "First Call Resolution (%FCR)", code: "%fcr",
     formula: (d) => {
@@ -192,8 +192,8 @@ export const ROW_DEFS = [
   // 9. COUVERTURE DE CHARGE
   // ══════════════════════════════════════════
   { type: "section", label: "Couverture de charge et heures" },
-  { type: "sub", label: "Besoin en heures",              code: "besoin2",    formula: (d) => v(d, "prev", "besoin2"),   fmt: "decimal1" },
-  { type: "sub", label: "Heures planifiées",             code: "planning2",  formula: (d) => v(d, "prev", "planning2"), fmt: "decimal1" },
+  { type: "sub", label: "Besoin en heures", code: "besoin2", formula: (d) => v(d, "prev", "besoin2"), fmt: "decimal1" },
+  { type: "sub", label: "Heures planifiées", code: "planning2", formula: (d) => v(d, "prev", "planning2"), fmt: "decimal1" },
   {
     type: "sub", label: "Heures loguées", code: "h_loguees",
     formula: (d) => {
@@ -213,7 +213,7 @@ export const ROW_DEFS = [
     fmt: "decimal1",
   },
   { type: "sub", label: "Sous-staff (Planning vs besoin)", code: "sous_staff", formula: (d) => v(d, "prev", "sous_staff") ?? null, fmt: "decimal1" },
-  { type: "sub", label: "Sur-staff (Planning vs besoin)",  code: "sur_staff",  formula: (d) => v(d, "prev", "sur_staff") ?? null, fmt: "decimal1" },
+  { type: "sub", label: "Sur-staff (Planning vs besoin)", code: "sur_staff", formula: (d) => v(d, "prev", "sur_staff") ?? null, fmt: "decimal1" },
   {
     type: "kpi", label: "Taux de couverture", code: "tx_couv",
     formula: (d) => pct(v(d, "prev", "planning2"), v(d, "prev", "besoin2")),
@@ -314,8 +314,9 @@ export const ROW_DEFS = [
   // ══════════════════════════════════════════
   // 11. TRAITEMENT (RD) – dynamique
   // ══════════════════════════════════════════
-  { type: "section", label: "Traitement", dynamicRd: "traitement",
-    rdKeys: ["Appel entrant","Appel manuel","Appel sortant","E-Mail","Mode recherche","Numérotation","Post-travail","Traitement BO"]
+  {
+    type: "section", label: "Traitement", dynamicRd: "traitement",
+    rdKeys: ["Appel entrant", "Appel manuel", "Appel sortant", "E-Mail", "Mode recherche", "Numérotation", "Post-travail", "Traitement BO"]
   },
   {
     type: "kpi", label: "Taux Traitement BO", code: "tx_bo",
@@ -330,13 +331,14 @@ export const ROW_DEFS = [
   // ══════════════════════════════════════════
   // 12. MANAGEMENT – dynamique
   // ══════════════════════════════════════════
-  { type: "section", label: "Management", dynamicRd: "management",
-    rdKeys: ["Brief","Calibrage","Débriefe après paralleling","Individual Coaching","Point avec le DO","Sharing time","Supervision"]
+  {
+    type: "section", label: "Management", dynamicRd: "management",
+    rdKeys: ["Brief", "Calibrage", "Débriefe après paralleling", "Individual Coaching", "Point avec le DO", "Sharing time", "Supervision"]
   },
   {
     type: "kpi", label: "Taux management sur heures loguées", code: "tx_mgmt",
     formula: (d) => {
-      const keys = ["Brief","Calibrage","Débriefe après paralleling","Individual Coaching","Point avec le DO","Sharing time","Supervision"];
+      const keys = ["Brief", "Calibrage", "Débriefe après paralleling", "Individual Coaching", "Point avec le DO", "Sharing time", "Supervision"];
       let sum = 0;
       keys.forEach(k => { sum += v(d, "rd", k) || 0; });
       const hl = hLog(d);
@@ -362,8 +364,9 @@ export const ROW_DEFS = [
   // ══════════════════════════════════════════
   // 14. PAUSE
   // ══════════════════════════════════════════
-  { type: "section", label: "Pause", dynamicRd: "pause",
-    rdKeys: ["Aucun contexte démarré","Consultation","Ostie","Pause"]
+  {
+    type: "section", label: "Pause", dynamicRd: "pause",
+    rdKeys: ["Aucun contexte démarré", "Consultation", "Ostie", "Pause"]
   },
   {
     type: "kpi", label: "Taux pause sur heures loguées", code: "tx_pause",
@@ -379,7 +382,7 @@ export const ROW_DEFS = [
   // 15. DISPO
   // ══════════════════════════════════════════
   { type: "section", label: "Dispo" },
-  { type: "sub", label: "Attente",                       code: "dispo_att", formula: rd("Attente"), fmt: "duration" },
+  { type: "sub", label: "Attente", code: "dispo_att", formula: rd("Attente"), fmt: "duration" },
   {
     type: "kpi", label: "Taux de dispo sur heures loguées", code: "tx_dispo",
     formula: (d) => {
