@@ -76,21 +76,21 @@ export function getChipClass(value, row, dark) {
 
   if (colorMode === "range") {
     if (value >= refMin && value <= refMax) chip = "green";
-    else if (value < refMin) chip = value >= refMin - 0.1 ? "orange" : "red";
-    else chip = "orange";
+    else if (value < refMin) chip = value >= refMin - 0.1 ? "red" : "orange";
+    else chip = "red";
   } else if (colorMode === "min") {
     if (value >= refMin) chip = "green";
-    else if (value >= refMin - 0.05) chip = "orange";
-    else chip = "red";
+    else if (value >= refMin - 0.05) chip = "red";
+    else chip = "orange";
   } else if (colorMode === "max_inv") {
     if (value <= refMax) chip = "green";
-    else if (value <= refMax + 0.05) chip = "orange";
-    else chip = "red";
-  } else if (colorMode === "range_target") {
-    // like range but tighter: orange if slightly over
-    if (value >= refMin && value <= refMax) chip = "green";
-    else if (value < refMin) chip = value >= refMin * 0.95 ? "orange" : "red";
+    else if (value <= refMax + 0.05) chip = "red";
     else chip = "orange";
+  } else if (colorMode === "range_target") {
+    // like range but tighter: red if slightly over
+    if (value >= refMin && value <= refMax) chip = "green";
+    else if (value < refMin) chip = value >= refMin * 0.95 ? "red" : "orange";
+    else chip = "red";
   }
 
   const colors = {

@@ -6,7 +6,7 @@ import { parseDate, shortDate, getDayLabel, formatMonth, fmtNum, fmtPct, fmtSec,
 
 function ToggleBtn({ collapsed, onClick, dark }) {
   return (
-    <button onClick={onClick} className={`w-[17px] h-[17px] rounded text-[10px] font-bold flex-shrink-0 flex items-center justify-center border cursor-pointer transition-colors ${dark ? "bg-white/10 border-white/30 text-white/70 hover:border-blue-400 hover:text-blue-400" : "bg-white/70 border-slate-400 text-slate-500 hover:border-blue-500 hover:text-blue-500 hover:bg-blue-50"}`}>
+    <button onClick={onClick} className={`w-[17px] h-[17px] rounded text-[12px] font-bold flex-shrink-0 flex items-center justify-center border cursor-pointer transition-colors ${dark ? "bg-white/10 border-white/30 text-white/70 hover:border-blue-400 hover:text-blue-400" : "bg-white/70 border-slate-400 text-slate-500 hover:border-blue-500 hover:text-blue-500 hover:bg-blue-50"}`}>
       {collapsed ? "+" : "−"}
     </button>
   );
@@ -19,19 +19,19 @@ function CellValue({ value, row, dark }) {
 
   let formatted;
   switch (row.fmt) {
-    case "percent":   formatted = fmtPct(value); break;
-    case "second":    formatted = fmtSec(value); break;
-    case "duration":  formatted = fmtHHMM(value); break;
-    case "decimal1":  formatted = fmtDecimal(value, 1); break;
-    case "decimal2":  formatted = fmtDecimal(value, 2); break;
-    default:          formatted = fmtNum(value);
+    case "percent": formatted = fmtPct(value); break;
+    case "second": formatted = fmtSec(value); break;
+    case "duration": formatted = fmtHHMM(value); break;
+    case "decimal1": formatted = fmtDecimal(value, 1); break;
+    case "decimal2": formatted = fmtDecimal(value, 2); break;
+    default: formatted = fmtNum(value);
   }
 
   if (!row.colorMode) return <span>{formatted}</span>;
 
   const chipClass = getChipClass(value, row, dark);
   return (
-    <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-semibold leading-tight ${chipClass || ""}`}>
+    <span className={`inline-block px-1.5 py-0.5 rounded-full text-[12px] font-semibold leading-tight ${chipClass || ""}`}>
       {formatted}
     </span>
   );
@@ -57,27 +57,27 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
   };
 
   // Theme tokens
-  const bg        = dark ? "#161b22" : "#fff";
-  const bgH       = dark ? "bg-[#21262d]" : "bg-slate-100";
-  const brd       = dark ? "border-[#30363d]" : "border-slate-200";
-  const brdS      = dark ? "border-[#484f58]" : "border-slate-300";
-  const txtMuted  = dark ? "text-slate-500" : "text-slate-400";
-  const txt       = dark ? "text-slate-200" : "text-slate-800";
-  const hov       = dark ? "hover:bg-[#1f2d45]" : "hover:bg-blue-50";
-  const wkBg      = dark ? "bg-[#1a2035]" : "bg-[#f0f4ff]";
-  const moBg      = dark ? "bg-[#1c2d50]" : "bg-blue-100";
+  const bg = dark ? "#161b22" : "#fff";
+  const bgH = dark ? "bg-[#21262d]" : "bg-slate-100";
+  const brd = dark ? "border-[#30363d]" : "border-slate-200";
+  const brdS = dark ? "border-[#484f58]" : "border-slate-300";
+  const txtMuted = dark ? "text-slate-500" : "text-slate-400";
+  const txt = dark ? "text-slate-200" : "text-slate-800";
+  const hov = dark ? "hover:bg-[#1f2d45]" : "hover:bg-blue-50";
+  const wkBg = dark ? "bg-[#1a2035]" : "bg-[#f0f4ff]";
+  const moBg = dark ? "bg-[#1c2d50]" : "bg-blue-100";
 
   const renderCell = (value, row) => <CellValue value={value} row={row} dark={dark} />;
 
   const dataCols = (row) =>
     sortedMonths.map((m) => {
       const mDates = sortedDates.filter((dt) => dateMois[dt] === m);
-      const mAgg   = buildAgg(mDates, dateIndex);
-      const mVal   = row.formula(mAgg);
+      const mAgg = buildAgg(mDates, dateIndex);
+      const mVal = row.formula(mAgg);
 
       if (collapseState["m:" + m]) {
         return (
-          <td key={m} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[10px] font-bold min-w-[72px] ${moBg}`}>
+          <td key={m} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[12px] font-bold min-w-[72px] ${moBg}`}>
             {renderCell(mVal, row)}
           </td>
         );
@@ -87,22 +87,22 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
       return [
         ...wks.map((w) => {
           const wDates = monthWeekDay[m][w].slice().sort((a, b) => parseDate(a) - parseDate(b));
-          const wAgg   = buildAgg(wDates, dateIndex);
-          const wVal   = row.formula(wAgg);
+          const wAgg = buildAgg(wDates, dateIndex);
+          const wVal = row.formula(wAgg);
           return [
             ...(!collapseState["w:" + m + ":" + w]
               ? wDates.map((dt) => (
-                  <td key={dt} className={`px-2 py-1.5 text-center border-b border-r ${brd} text-[10px] min-w-[72px] ${row.type === "kpi" ? "font-semibold" : "font-normal"}`}>
-                    {renderCell(row.formula(dateIndex[dt] || {}), row)}
-                  </td>
-                ))
+                <td key={dt} className={`px-2 py-1.5 text-center border-b border-r ${brd} text-[12px] min-w-[72px] ${row.type === "kpi" ? "font-semibold" : "font-normal"}`}>
+                  {renderCell(row.formula(dateIndex[dt] || {}), row)}
+                </td>
+              ))
               : []),
-            <td key={w + "-wt"} className={`px-2 py-1.5 text-center border-b border-l border-r-2 ${brdS} text-[10px] font-bold min-w-[72px] ${wkBg}`}>
+            <td key={w + "-wt"} className={`px-2 py-1.5 text-center border-b border-l border-r-2 ${brdS} text-[12px] font-bold min-w-[72px] ${wkBg}`}>
               {renderCell(wVal, row)}
             </td>,
           ];
         }),
-        <td key={m + "-mt"} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[10px] font-bold min-w-[72px] ${moBg}`}>
+        <td key={m + "-mt"} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[12px] font-bold min-w-[72px] ${moBg}`}>
           {renderCell(mVal, row)}
         </td>,
       ];
@@ -117,10 +117,10 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
 
           {/* Row 1 – months */}
           <tr>
-            <th rowSpan={3} className={`sticky left-0 z-[60] min-w-[215px] max-w-[215px] ${bgH} border-b border-r ${brd} text-left px-2.5 py-1.5 text-[10px] font-semibold tracking-widest ${txtMuted}`}>INDICATEUR</th>
-            <th rowSpan={3} className={`sticky left-[215px] z-[60] min-w-[110px] max-w-[110px] ${bgH} border-b border-r-2 ${brdS} text-center px-2.5 py-1.5 text-[10px] font-semibold tracking-wider ${txtMuted}`}>CODE</th>
-            <th rowSpan={3} className={`sticky left-[325px] z-[60] min-w-[58px] ${bgH} border-b border-r ${brd} text-center px-2 py-1.5 text-[10px] font-semibold text-amber-600`}>MIN</th>
-            <th rowSpan={3} className={`sticky left-[383px] z-[60] min-w-[58px] ${bgH} border-b border-r-[3px] border-blue-500 text-center px-2 py-1.5 text-[10px] font-semibold text-green-600`}>MAX</th>
+            <th rowSpan={3} className={`sticky left-0 z-[60] min-w-[215px] max-w-[215px] ${bgH} border-b border-r ${brd} text-left px-2.5 py-1.5 text-[16px] font-semibold tracking-widest ${txtMuted}`}>INDICATEUR</th>
+            <th rowSpan={3} className={`sticky left-[215px] z-[60] min-w-[90px] max-w-[90px] ${bgH} border-b border-r-2 ${brdS} text-center px-2 py-1.5 text-[16px] font-semibold tracking-wider ${txtMuted}`}>CODE</th>
+            <th rowSpan={3} className={`sticky left-[325px] z-[60] min-w-[58px] ${bgH} border-b border-r ${brd} text-center px-2 py-1.5 text-[12px] font-semibold text-amber-600`}>MIN</th>
+            <th rowSpan={3} className={`sticky left-[383px] z-[60] min-w-[58px] ${bgH} border-b border-r-[3px] border-blue-500 text-center px-2 py-1.5 text-[12px] font-semibold text-green-600`}>MAX</th>
             {sortedMonths.map((m) => {
               const wks = Object.keys(monthWeekDay[m]).sort();
               let span = 1;
@@ -143,7 +143,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
             {sortedMonths.map((m) => {
               if (collapseState["m:" + m]) {
                 return (
-                  <th key={m} rowSpan={2} className={`min-w-[72px] ${moBg} border-b border-r-[3px] border-blue-500 text-[10px] font-bold text-blue-600 px-2 py-1`}>
+                  <th key={m} rowSpan={2} className={`min-w-[72px] ${moBg} border-b border-r-[3px] border-blue-500 text-[12px] font-bold text-blue-600 px-2 py-1`}>
                     <div className="flex flex-col items-center gap-0.5"><span className="font-bold">Total</span><span className="font-normal">{formatMonth(m)}</span></div>
                   </th>
                 );
@@ -153,7 +153,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
                 ...wks.map((w) => {
                   const dc = collapseState["w:" + m + ":" + w] ? 0 : monthWeekDay[m][w].length;
                   return (
-                    <th key={w} colSpan={dc + 1} className={`${bgH} ${brd} border-b border-r text-[10px] font-semibold ${txt} px-2 py-1`}>
+                    <th key={w} colSpan={dc + 1} className={`${bgH} ${brd} border-b border-r text-[12px] font-semibold ${txt} px-2 py-1`}>
                       <div className="flex items-center justify-center gap-1.5">
                         <ToggleBtn collapsed={!!collapseState["w:" + m + ":" + w]} onClick={() => onToggle("w:" + m + ":" + w)} dark={dark} />
                         {w}
@@ -161,7 +161,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
                     </th>
                   );
                 }),
-                <th key={m + "-total"} rowSpan={2} className={`min-w-[72px] ${moBg} border-b border-r-[3px] border-blue-500 text-[10px] font-bold text-blue-600 px-2 py-1`}>
+                <th key={m + "-total"} rowSpan={2} className={`min-w-[72px] ${moBg} border-b border-r-[3px] border-blue-500 text-[12px] font-bold text-blue-600 px-2 py-1`}>
                   <div className="flex flex-col items-center gap-0.5"><span className="font-bold">Total</span><span className="font-normal">{formatMonth(m)}</span></div>
                 </th>,
               ];
@@ -176,13 +176,13 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
               return wks.map((w) => [
                 ...(!collapseState["w:" + m + ":" + w]
                   ? monthWeekDay[m][w].slice().sort((a, b) => parseDate(a) - parseDate(b)).map((d) => (
-                      <th key={d} className={`${bgH} ${brd} border-b border-r text-center px-2 py-1 min-w-[72px]`}>
-                        <div className="flex flex-col items-center gap-0.5">
-                          <span className={`text-[10px] font-semibold ${txt}`}>{getDayLabel(d)}</span>
-                          <span className={`text-[9px] font-normal ${txtMuted}`}>{shortDate(d)}</span>
-                        </div>
-                      </th>
-                    ))
+                    <th key={d} className={`${bgH} ${brd} border-b border-r text-center px-2 py-1 min-w-[72px]`}>
+                      <div className="flex flex-col items-center gap-0.5">
+                        <span className={`text-[12px] font-semibold ${txt}`}>{getDayLabel(d)}</span>
+                        <span className={`text-[9px] font-normal ${txtMuted}`}>{shortDate(d)}</span>
+                      </div>
+                    </th>
+                  ))
                   : []),
                 <th key={w + "-wt"} className={`min-w-[72px] ${wkBg} border-b border-l border-r-2 ${brdS} text-center px-2 py-1`}>
                   <div className="flex flex-col items-center gap-0">
@@ -218,17 +218,17 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
                   {row.label}
                 </td>
                 {/* Code */}
-                <td className={`sticky left-[215px] z-20 px-2.5 py-1.5 text-left border-b border-r-2 ${brdS} text-[10px] ${txtMuted}`} style={{ background: bg }}>
+                <td className={`sticky left-[215px] z-20 px-2.5 py-1.5 text-left border-b border-r-2 ${brdS} text-[12px] ${txtMuted}`} style={{ background: bg }}>
                   {row.code || ""}
                 </td>
                 {/* RefMin */}
-                <td className={`sticky left-[325px] z-20 px-2 py-1.5 text-center border-b border-r ${brd} text-[10px] font-semibold text-amber-600`} style={{ background: bg }}>
+                <td className={`sticky left-[325px] z-20 px-2 py-1.5 text-center border-b border-r ${brd} text-[12px] font-semibold text-amber-600`} style={{ background: bg }}>
                   {row.refMin !== undefined
                     ? (row.fmt === "second" ? fmtSec(row.refMin) : row.fmt === "decimal1" || row.fmt === "decimal2" ? fmtDecimal(row.refMin, 1) : fmtPct(row.refMin))
                     : ""}
                 </td>
                 {/* RefMax */}
-                <td className={`sticky left-[383px] z-20 px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[10px] font-semibold text-green-600`} style={{ background: bg }}>
+                <td className={`sticky left-[383px] z-20 px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[12px] font-semibold text-green-600`} style={{ background: bg }}>
                   {row.refMax !== undefined
                     ? (row.fmt === "second" ? fmtSec(row.refMax) : row.fmt === "decimal1" || row.fmt === "decimal2" ? fmtDecimal(row.refMax, 1) : fmtPct(row.refMax))
                     : ""}
