@@ -61,17 +61,17 @@ export const ROW_DEFS = [
   // 2. VOLUMÉTRIE
   // ══════════════════════════════════════════
   { type: "section", label: "Volumétrie" },
-  { type: "sub", label: "Reçus", code: "recu", formula: inc("recu"), fmt: "number" },
-  { type: "kpi", label: "% TRP vs Prévisions", code: "%trp_prev", formula: (d) => pct(v(d, "incoming", "recu"), v(d, "prev", "prevision")), fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
-  { type: "kpi", label: "% TRP vs Reforecast", code: "%trp_ref", formula: (d) => pct(v(d, "incoming", "recu"), v(d, "prev", "reforecast")), fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
-  { type: "sub", label: "Traités", code: "traite", formula: inc("traite"), fmt: "number" },
-  { type: "kpi", label: "% QS", code: "%qs", formula: (d) => pct(v(d, "incoming", "traite"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.90, refMin: 0.90, colorMode: "min" },
-  { type: "sub", label: "Traité SL < 20 sec", code: "traite_sl", formula: inc("traite_sl"), fmt: "number" },
-  { type: "kpi", label: "% SL", code: "%sl", formula: (d) => pct(v(d, "incoming", "traite_sl"), v(d, "incoming", "traite")), fmt: "percent", refMin: 0.80, colorMode: "min" },
-  { type: "sub", label: "Appels transférés", code: "transfert", formula: inc("transfert"), fmt: "number" },
-  { type: "kpi", label: "% Transfert", code: "%transfert", formula: (d) => pct(v(d, "incoming", "transfert"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
-  { type: "sub", label: "Raccrochés par agent", code: "racc", formula: inc("raccrochage"), fmt: "number" },
-  { type: "kpi", label: "% Raccrochage", code: "%racc", formula: (d) => pct(v(d, "incoming", "raccrochage"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Reçus",                 code: "recu",       formula: inc("recu"),    fmt: "number" },
+  { type: "kpi", label: "% TRP vs Prévisions",   code: "%trp_prev",  formula: (d) => pct(v(d,"incoming","recu"), v(d,"prev","prevision")),   fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
+  { type: "kpi", label: "% TRP vs Reforecast",   code: "%trp_ref",   formula: (d) => pct(v(d,"incoming","recu"), v(d,"prev","reforecast")),  fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
+  { type: "sub", label: "Traités",                code: "traite",     formula: inc("traite"),  fmt: "number" },
+  { type: "kpi", label: "% QS",                   code: "%qs",        formula: (d) => pct(v(d,"incoming","traite"), v(d,"incoming","recu")),  fmt: "percent", refMax: 0.90, colorMode: "min", refMin: 0.90 },
+  { type: "sub", label: "Traité SL < 20 sec",     code: "traite_sl",  formula: inc("traite_sl"), fmt: "number" },
+  { type: "kpi", label: "% SL",                   code: "%sl",        formula: (d) => pct(v(d,"incoming","traite_sl"), v(d,"incoming","traite")), fmt: "percent", refMin: 0.80, colorMode: "min" },
+  { type: "sub", label: "Appels transférés",       code: "transfert",  formula: inc("transfert"), fmt: "number" },
+  { type: "kpi", label: "% Transfert",            code: "%transfert", formula: (d) => pct(v(d,"incoming","transfert"), v(d,"incoming","recu")),  fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Raccrochés par agent",   code: "racc",       formula: inc("raccrochage"), fmt: "number" },
+  { type: "kpi", label: "% Raccrochage",          code: "%racc",      formula: (d) => pct(v(d,"incoming","raccrochage"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
 
   // ══════════════════════════════════════════
   // 3. SL RÉVISÉ
@@ -157,27 +157,27 @@ export const ROW_DEFS = [
   // 7. RÉITÉRATION MÊME TYPO
   // ══════════════════════════════════════════
   { type: "section", label: "Réitération même typologie" },
-  { type: "sub", label: "Réitération 1h", code: "reit_1h_t", formula: inc("reit_typo_1h"), fmt: "number" },
-  { type: "kpi", label: "% Réitération 1h", code: "%reit_1h_t", formula: (d) => pct(v(d, "incoming", "reit_typo_1h"), v(d, "incoming", "traite")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 1j", code: "reit_24h_t", formula: inc("reit_typo_24h"), fmt: "number" },
-  { type: "kpi", label: "% Réitération 1j", code: "%reit_24h_t", formula: (d) => pct(v(d, "incoming", "reit_typo_24h"), v(d, "incoming", "traite")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 3j", code: "reit_72h_t", formula: inc("reit_typo_72h"), fmt: "number" },
-  { type: "kpi", label: "% Réitération 3j", code: "%reit_72h_t", formula: (d) => pct(v(d, "incoming", "reit_typo_72h"), v(d, "incoming", "traite")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 7j", code: "reit_sem_t", formula: inc("reit_typo_semaine"), fmt: "number" },
-  { type: "kpi", label: "% Réitération 7j", code: "%reit_sem_t", formula: (d) => pct(v(d, "incoming", "reit_typo_semaine"), v(d, "incoming", "traite")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1h",               code: "reit_1h_t",   formula: inc("reit_typo_1h"),       fmt: "number" },
+  { type: "kpi", label: "% Réitération 1h",             code: "%reit_1h_t",  formula: (d) => pct(v(d,"incoming","reit_typo_1h"), v(d,"incoming","recu")),       fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1j",               code: "reit_24h_t",  formula: inc("reit_typo_24h"),      fmt: "number" },
+  { type: "kpi", label: "% Réitération 1j",             code: "%reit_24h_t", formula: (d) => pct(v(d,"incoming","reit_typo_24h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 3j",               code: "reit_72h_t",  formula: inc("reit_typo_72h"),      fmt: "number" },
+  { type: "kpi", label: "% Réitération 3j",             code: "%reit_72h_t", formula: (d) => pct(v(d,"incoming","reit_typo_72h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 7j",               code: "reit_sem_t",  formula: inc("reit_typo_semaine"),  fmt: "number" },
+  { type: "kpi", label: "% Réitération 7j",             code: "%reit_sem_t", formula: (d) => pct(v(d,"incoming","reit_typo_semaine"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
 
   // ══════════════════════════════════════════
   // 8. RÉITÉRATION SANS TYPO
   // ══════════════════════════════════════════
   { type: "section", label: "Réitération sans distinction typologie" },
-  { type: "sub", label: "Réitération 1h", code: "reit_1h", formula: inc("reit_1h"), fmt: "number" },
-  { type: "kpi", label: "% Réitération 1h", code: "%reit_1h", formula: (d) => pct(v(d, "incoming", "reit_1h"), v(d, "incoming", "traite")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 1j", code: "reit_24h", formula: inc("reit_24h"), fmt: "number" },
-  { type: "kpi", label: "% Réitération 1j", code: "%reit_24h", formula: (d) => pct(v(d, "incoming", "reit_24h"), v(d, "incoming", "traite")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 3j", code: "reit_72h", formula: inc("reit_72h"), fmt: "number" },
-  { type: "kpi", label: "% Réitération 3j", code: "%reit_72h", formula: (d) => pct(v(d, "incoming", "reit_72h"), v(d, "incoming", "traite")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 7j", code: "reit_sem", formula: inc("reit_semaine"), fmt: "number" },
-  { type: "kpi", label: "% Réitération 7j", code: "%reit_sem", formula: (d) => pct(v(d, "incoming", "reit_semaine"), v(d, "incoming", "traite")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1h",               code: "reit_1h",   formula: inc("reit_1h"),       fmt: "number" },
+  { type: "kpi", label: "% Réitération 1h",             code: "%reit_1h",  formula: (d) => pct(v(d,"incoming","reit_1h"), v(d,"incoming","recu")),       fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1j",               code: "reit_24h",  formula: inc("reit_24h"),      fmt: "number" },
+  { type: "kpi", label: "% Réitération 1j",             code: "%reit_24h", formula: (d) => pct(v(d,"incoming","reit_24h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 3j",               code: "reit_72h",  formula: inc("reit_72h"),      fmt: "number" },
+  { type: "kpi", label: "% Réitération 3j",             code: "%reit_72h", formula: (d) => pct(v(d,"incoming","reit_72h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 7j",               code: "reit_sem",  formula: inc("reit_semaine"),  fmt: "number" },
+  { type: "kpi", label: "% Réitération 7j",             code: "%reit_sem", formula: (d) => pct(v(d,"incoming","reit_semaine"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
   {
     type: "kpi", label: "First Call Resolution (%FCR)", code: "%fcr",
     formula: (d) => 1 - pct(v(d, "incoming", "reit_24h"), v(d, "incoming", "traite")),
@@ -208,8 +208,8 @@ export const ROW_DEFS = [
     },
     fmt: "decimal1",
   },
-  // { type: "sub", label: "Sous-staff (Planning vs besoin)", code: "sous_staff", formula: (d) => v(d, "prev", "sous_staff") ?? null, fmt: "decimal1" },
-  // { type: "sub", label: "Sur-staff (Planning vs besoin)",  code: "sur_staff",  formula: (d) => v(d, "prev", "sur_staff") ?? null, fmt: "decimal1" },
+  { type: "sub", label: "Sous-staff (Planning vs besoin)", code: "sous_staff", formula: (d) => v(d, "prev", "sous_staff") ?? null, fmt: "decimal1" },
+  { type: "sub", label: "Sur-staff (Planning vs besoin)",  code: "sur_staff",  formula: (d) => v(d, "prev", "sur_staff") ?? null, fmt: "decimal1" },
   {
     type: "kpi", label: "Taux de couverture", code: "tx_couv",
     formula: (d) => pct(v(d, "prev", "planning2"), v(d, "prev", "besoin2")),
