@@ -31,7 +31,7 @@ function CellValue({ value, row, dark }) {
 
   const chipClass = getChipClass(value, row, dark);
   return (
-    <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-semibold leading-tight ${chipClass || ""}`}>
+    <span className={`inline-block px-1.5 py-0.5 rounded-full text-[12px] font-semibold leading-tight ${chipClass || ""}`}>
       {formatted}
     </span>
   );
@@ -92,7 +92,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
           return [
             ...(!collapseState["w:" + m + ":" + w]
               ? wDates.map((dt) => (
-                  <td key={dt} className={`px-2 py-1.5 text-center border-b border-r ${brd} text-[10px] min-w-[72px] ${row.type === "kpi" ? "font-semibold" : "font-normal"}`}>
+                  <td key={dt} className={`px-2 py-1.5 text-center border-b border-r ${brd} text-[12px] min-w-[72px] ${row.type === "kpi" ? "font-semibold" : "font-normal"}`}>
                     {renderCell(row.formula(dateIndex[dt] || {}), row)}
                   </td>
                 ))
@@ -102,7 +102,7 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
             </td>,
           ];
         }),
-        <td key={m + "-mt"} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[10px] font-bold min-w-[72px] ${moBg}`}>
+        <td key={m + "-mt"} className={`px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[12px] font-bold min-w-[72px] ${moBg}`}>
           {renderCell(mVal, row)}
         </td>,
       ];
@@ -117,10 +117,10 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
 
           {/* Row 1 – months */}
           <tr>
-            <th rowSpan={3} className={`sticky left-0 z-[60] min-w-[215px] max-w-[215px] ${bgH} border-b border-r ${brd} text-left px-2.5 py-1.5 text-[10px] font-semibold tracking-widest ${txtMuted}`}>INDICATEUR</th>
-            <th rowSpan={3} className={`sticky left-[215px] z-[60] min-w-[110px] max-w-[110px] ${bgH} border-b border-r-2 ${brdS} text-center px-2.5 py-1.5 text-[10px] font-semibold tracking-wider ${txtMuted}`}>CODE</th>
-            <th rowSpan={3} className={`sticky left-[325px] z-[60] min-w-[58px] ${bgH} border-b border-r ${brd} text-center px-2 py-1.5 text-[10px] font-semibold text-amber-600`}>MIN</th>
-            <th rowSpan={3} className={`sticky left-[383px] z-[60] min-w-[58px] ${bgH} border-b border-r-[3px] border-blue-500 text-center px-2 py-1.5 text-[10px] font-semibold text-green-600`}>MAX</th>
+            <th rowSpan={3} className={`sticky left-0 z-[60] min-w-[215px] max-w-[215px] ${bgH} border-b border-r ${brd} text-left px-2.5 py-1.5 text-[16px] font-semibold tracking-widest ${txtMuted}`}>INDICATEUR</th>
+            <th rowSpan={3} className={`sticky left-[215px] z-[60] min-w-[110px] max-w-[110px] ${bgH} border-b border-r-2 ${brdS} text-center px-2.5 py-1.5 text-[16px] font-semibold tracking-wider ${txtMuted}`}>CODE</th>
+            <th rowSpan={3} className={`sticky left-[325px] z-[60] min-w-[58px] ${bgH} border-b border-r ${brdS} text-center px-2 py-1.5 text-[16px] font-semibold text-amber-600`}>MIN</th>
+            <th rowSpan={3} className={`sticky left-[383px] z-[60] min-w-[58px] ${bgH} border-b border-r-[3px] ${brdS} text-center px-2 py-1.5 text-[16px] font-semibold text-green-600`}>MAX</th>
             {sortedMonths.map((m) => {
               const wks = Object.keys(monthWeekDay[m]).sort();
               let span = 1;
@@ -222,13 +222,13 @@ export default function DataTable({ dataIdx, collapseState, onToggle, dark }) {
                   {row.code || ""}
                 </td>
                 {/* RefMin */}
-                <td className={`sticky left-[325px] z-20 px-2 py-1.5 text-center border-b border-r ${brd} text-[12px] font-semibold text-amber-600`} style={{ background: bg }}>
+                <td className={`sticky left-[325px] z-20 px-2 py-1.5 text-center border-b border-r ${brdS} text-[12px] font-semibold text-amber-600`} style={{ background: bg }}>
                   {row.refMin !== undefined
                     ? (row.fmt === "second" ? fmtSec(row.refMin) : row.fmt === "decimal1" || row.fmt === "decimal2" ? fmtDecimal(row.refMin, 1) : fmtPct(row.refMin))
                     : ""}
                 </td>
                 {/* RefMax */}
-                <td className={`sticky left-[383px] z-20 px-2 py-1.5 text-center border-b border-r-[3px] border-blue-500 text-[10px] font-semibold text-green-600`} style={{ background: bg }}>
+                <td className={`sticky left-[383px] z-20 px-2 py-1.5 text-center border-b border-r-[3px] ${brdS} text-[12px] font-semibold text-green-600`} style={{ background: bg }}>
                   {row.refMax !== undefined
                     ? (row.fmt === "second" ? fmtSec(row.refMax) : row.fmt === "decimal1" || row.fmt === "decimal2" ? fmtDecimal(row.refMax, 1) : fmtPct(row.refMax))
                     : ""}

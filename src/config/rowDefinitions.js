@@ -16,7 +16,8 @@ const durSec = (src, attr) => (d) => v(d, src, attr); // raw seconds
 const hLog = (d) => {
   // Heures loguées = sum of all rd durations (total in-chair time)
   const rdKeys = ["Appel entrant", "Appel manuel", "Appel sortant", "E-Mail",
-    "Mode recherche", "Numérotation", "Post-travail", "Traitement BO",
+    "Mode recherche", "Numérotation", "Post-travail",
+     "Traitement BO",
     "Brief", "Calibrage", "Débriefe après paralleling", "Individual Coaching",
     "Point avec le DO", "Sharing time", "Supervision", "Formation",
     "Aucun contexte démarré", "Consultation", "Ostie", "Pause", "Attente"];

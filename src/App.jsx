@@ -3,6 +3,7 @@ import TopBar from "./components/TopBar";
 import EmptyState from "./components/EmptyState";
 import DataTable from "./components/DataTable";
 import Legend from "./components/Legend";
+import Loading from "./components/Loading";
 import { parseCSV } from "./utils/csvParser";
 import { buildIndex } from "./utils/dataProcessor";
 
@@ -76,12 +77,7 @@ export default function App() {
 
       {dataIdx && <Legend dark={dark} />}
 
-      {loading && (
-        <div className={`fixed inset-0 z-[999] flex flex-col items-center justify-center gap-3.5 ${dark ? "bg-[#0d1117]/90" : "bg-[#f5f7fa]/90"}`}>
-          <div className="w-8 h-8 border-[3px] border-slate-200 border-t-blue-600 rounded-full animate-spin" />
-          <span className={`text-[13px] font-medium ${dark ? "text-slate-500" : "text-slate-400"}`}>Traitement des données…</span>
-        </div>
-      )}
+      {loading && <Loading dark={dark} message="Traitement des données…" />}
     </div>
   );
 }
