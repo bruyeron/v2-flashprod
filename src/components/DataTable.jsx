@@ -1,6 +1,6 @@
 import { buildRows } from "../config/rowDefinitions";
 import { buildAgg } from "../utils/dataProcessor";
-import { parseDate, shortDate, getDayLabel, formatMonth, fmtNum, fmtPct, fmtSec, fmtHHMM, fmtDecimal, getChipClass } from "../utils/helpers";
+import { parseDate, shortDate, getDayLabel, formatMonth, fmtNum, fmtPct, fmtPctDecimal, fmtSec, fmtHHMM, fmtDecimal, getChipClass } from "../utils/helpers";
 
 // ─── sub-components ──────────────────────────
 
@@ -20,8 +20,10 @@ function CellValue({ value, row, dark }) {
   let formatted;
   switch (row.fmt) {
     case "percent": formatted = fmtPct(value); break;
+    case "percent_decimal": formatted = fmtPctDecimal(value,1); break;
     case "second": formatted = fmtSec(value); break;
     case "duration": formatted = fmtHHMM(value); break;
+    case "decimal0": formatted = fmtDecimal(value, 0); break;
     case "decimal1": formatted = fmtDecimal(value, 1); break;
     case "decimal2": formatted = fmtDecimal(value, 2); break;
     default: formatted = fmtNum(value);

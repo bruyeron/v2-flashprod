@@ -114,10 +114,9 @@ export const ROW_DEFS = [
     type: "kpi", label: "Productivité / Heures loguées", code: "prod_hl",
     formula: (d) => {
       // (duree_com + duree_acw) / heures_loguees
-      const com = v(d, "incoming", "duree_com") || 0;
-      const acw = v(d, "incoming", "duree_acw") || 0;
-      const hl = hLog(d);
-      return hl ? (com + acw) / hl : null;
+      const traite = v(d, "incoming", "traite");
+      const hlogbo = hLogWithBO(d);
+      return traite && hlogbo ? traite / (hlogbo / 3600) : null;
     },
     fmt: "decimal1", refMin: 14, refMax: 14.4, colorMode: "range",
   },
@@ -377,7 +376,7 @@ export const ROW_DEFS = [
       const hl = hLog(d);
       return f && hl ? f / hl : null;
     },
-    fmt: "percent", refMin: 0.01, refMax: 0.02, colorMode: "range",
+    fmt: "percent_decimal", refMin: 0.01, refMax: 0.02, colorMode: "range",
   },
 
   // ══════════════════════════════════════════

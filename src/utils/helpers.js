@@ -51,6 +51,11 @@ export function fmtPct(val) {
     ? "—"
     : Math.round(val * 100) + "%";
 }
+export function fmtPctDecimal(val, digits = 2) {
+  return val === null || val === undefined || isNaN(val)
+    ? "—"
+    : val.toFixed(digits) + "%";
+}
 export function fmtSec(val) {
   if (val === null || val === undefined || isNaN(val)) return "—";
   return Math.round(val) + "s";
