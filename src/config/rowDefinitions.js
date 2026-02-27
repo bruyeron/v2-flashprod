@@ -17,18 +17,39 @@ const hLog = (d) => {
   // Heures loguées = sum of all rd durations (total in-chair time)
   const rdKeys = ["Appel entrant", "Appel manuel", "Appel sortant", "E-Mail",
     "Mode recherche", "Numérotation", "Post-travail",
-     "Traitement BO",
+    //  "Traitement BO", //101 Traitement
     "Brief", "Calibrage", "Débriefe après paralleling", "Individual Coaching",
-    "Point avec le DO", "Sharing time", "Supervision", "Formation",
+    "Point avec le DO", "Sharing time", "Supervision", // 111 management
+    "Formation", // 122 Formation
     "Aucun contexte démarré", "Consultation", "Ostie", "Pause", "Attente"];
   let sum = 0;
   rdKeys.forEach(k => { const val = v(d, "rd", k); if (val) sum += val; });
   return sum || null;
 };
+const hLogWithBO = (d) => {
+  const log = hLog(d);
+  const bo = v(d, "rd", "Traitement BO") || 0;
+  return log ? log + bo : null;
+}
 const hProd = (d) => {
   // Heures productives = Traitement
   const keys = ["Appel entrant", "Appel manuel", "Appel sortant", "E-Mail",
-    "Mode recherche", "Numérotation", "Post-travail", "Traitement BO"];
+    "Mode recherche", "Numérotation", "Post-travail"];
+  let sum = 0;
+  keys.forEach(k => { const val = v(d, "rd", k); if (val) sum += val; });
+  return sum || null;
+};
+const hPause = (d) => {
+  // Heures productives = Traitement
+  const keys = ["Aucun contexte démarré", "Consultation", "Ostie", "Pause"];
+  let sum = 0;
+  keys.forEach(k => { const val = v(d, "rd", k); if (val) sum += val; });
+  return sum || null;
+};
+const hMngt = (d) => {
+  // Heures productives = Traitement
+  const keys = ["Brief", "Calibrage", "Débriefe après paralleling", "Individual Coaching",
+    "Point avec le DO", "Sharing time", "Supervision"];
   let sum = 0;
   keys.forEach(k => { const val = v(d, "rd", k); if (val) sum += val; });
   return sum || null;
@@ -36,17 +57,12 @@ const hProd = (d) => {
 const hInChair = (d) => {
   // Heures de production (in-chair) = hLog - Pause - Dispo - Management - Formation - Pause non-categorisée
   const log = hLog(d);
-  const pause = v(d, "rd", "Pause") || 0;
-  const attente = v(d, "rd", "Attente") || 0;
-  const mgmt = (v(d, "rd", "Brief") || 0) + (v(d, "rd", "Calibrage") || 0) +
-    (v(d, "rd", "Débriefe après paralleling") || 0) + (v(d, "rd", "Individual Coaching") || 0) +
-    (v(d, "rd", "Point avec le DO") || 0) + (v(d, "rd", "Sharing time") || 0) +
-    (v(d, "rd", "Supervision") || 0);
+  const pause = hPause(d);
+  const mgmt = hMngt(d);
   const formation = v(d, "rd", "Formation") || 0;
-  const autres = (v(d, "rd", "Aucun contexte démarré") || 0) + (v(d, "rd", "Consultation") || 0) +
-    (v(d, "rd", "Ostie") || 0);
+  
   if (!log) return null;
-  return log - pause - attente - mgmt - formation - autres;
+  return log - pause - mgmt - formation;
 };
 
 export const ROW_DEFS = [
@@ -62,17 +78,17 @@ export const ROW_DEFS = [
   // 2. VOLUMÉTRIE
   // ══════════════════════════════════════════
   { type: "section", label: "Volumétrie" },
-  { type: "sub", label: "Reçus",                 code: "recu",       formula: inc("recu"),    fmt: "number" },
-  { type: "kpi", label: "% TRP vs Prévisions",   code: "%trp_prev",  formula: (d) => pct(v(d,"incoming","recu"), v(d,"prev","prevision")),   fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
-  { type: "kpi", label: "% TRP vs Reforecast",   code: "%trp_ref",   formula: (d) => pct(v(d,"incoming","recu"), v(d,"prev","reforecast")),  fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
-  { type: "sub", label: "Traités",                code: "traite",     formula: inc("traite"),  fmt: "number" },
-  { type: "kpi", label: "% QS",                   code: "%qs",        formula: (d) => pct(v(d,"incoming","traite"), v(d,"incoming","recu")),  fmt: "percent", refMax: 0.90, colorMode: "min", refMin: 0.90 },
-  { type: "sub", label: "Traité SL < 20 sec",     code: "traite_sl",  formula: inc("traite_sl"), fmt: "number" },
-  { type: "kpi", label: "% SL",                   code: "%sl",        formula: (d) => pct(v(d,"incoming","traite_sl"), v(d,"incoming","traite")), fmt: "percent", refMin: 0.80, colorMode: "min" },
-  { type: "sub", label: "Appels transférés",       code: "transfert",  formula: inc("transfert"), fmt: "number" },
-  { type: "kpi", label: "% Transfert",            code: "%transfert", formula: (d) => pct(v(d,"incoming","transfert"), v(d,"incoming","recu")),  fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
-  { type: "sub", label: "Raccrochés par agent",   code: "racc",       formula: inc("raccrochage"), fmt: "number" },
-  { type: "kpi", label: "% Raccrochage",          code: "%racc",      formula: (d) => pct(v(d,"incoming","raccrochage"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Reçus", code: "recu", formula: inc("recu"), fmt: "number" },
+  { type: "kpi", label: "% TRP vs Prévisions", code: "%trp_prev", formula: (d) => pct(v(d, "incoming", "recu"), v(d, "prev", "prevision")), fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
+  { type: "kpi", label: "% TRP vs Reforecast", code: "%trp_ref", formula: (d) => pct(v(d, "incoming", "recu"), v(d, "prev", "reforecast")), fmt: "percent", refMin: 0.90, refMax: 1.10, colorMode: "range" },
+  { type: "sub", label: "Traités", code: "traite", formula: inc("traite"), fmt: "number" },
+  { type: "kpi", label: "% QS", code: "%qs", formula: (d) => pct(v(d, "incoming", "traite"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.90, colorMode: "min", refMin: 0.90 },
+  { type: "sub", label: "Traité SL < 20 sec", code: "traite_sl", formula: inc("traite_sl"), fmt: "number" },
+  { type: "kpi", label: "% SL", code: "%sl", formula: (d) => pct(v(d, "incoming", "traite_sl"), v(d, "incoming", "traite")), fmt: "percent", refMin: 0.80, colorMode: "min" },
+  { type: "sub", label: "Appels transférés", code: "transfert", formula: inc("transfert"), fmt: "number" },
+  { type: "kpi", label: "% Transfert", code: "%transfert", formula: (d) => pct(v(d, "incoming", "transfert"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Raccrochés par agent", code: "racc", formula: inc("raccrochage"), fmt: "number" },
+  { type: "kpi", label: "% Raccrochage", code: "%racc", formula: (d) => pct(v(d, "incoming", "raccrochage"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
 
   // ══════════════════════════════════════════
   // 3. SL RÉVISÉ
@@ -158,27 +174,27 @@ export const ROW_DEFS = [
   // 7. RÉITÉRATION MÊME TYPO
   // ══════════════════════════════════════════
   { type: "section", label: "Réitération même typologie" },
-  { type: "sub", label: "Réitération 1h",               code: "reit_1h_t",   formula: inc("reit_typo_1h"),       fmt: "number" },
-  { type: "kpi", label: "% Réitération 1h",             code: "%reit_1h_t",  formula: (d) => pct(v(d,"incoming","reit_typo_1h"), v(d,"incoming","recu")),       fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 1j",               code: "reit_24h_t",  formula: inc("reit_typo_24h"),      fmt: "number" },
-  { type: "kpi", label: "% Réitération 1j",             code: "%reit_24h_t", formula: (d) => pct(v(d,"incoming","reit_typo_24h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 3j",               code: "reit_72h_t",  formula: inc("reit_typo_72h"),      fmt: "number" },
-  { type: "kpi", label: "% Réitération 3j",             code: "%reit_72h_t", formula: (d) => pct(v(d,"incoming","reit_typo_72h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 7j",               code: "reit_sem_t",  formula: inc("reit_typo_semaine"),  fmt: "number" },
-  { type: "kpi", label: "% Réitération 7j",             code: "%reit_sem_t", formula: (d) => pct(v(d,"incoming","reit_typo_semaine"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1h", code: "reit_1h_t", formula: inc("reit_typo_1h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 1h", code: "%reit_1h_t", formula: (d) => pct(v(d, "incoming", "reit_typo_1h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1j", code: "reit_24h_t", formula: inc("reit_typo_24h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 1j", code: "%reit_24h_t", formula: (d) => pct(v(d, "incoming", "reit_typo_24h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 3j", code: "reit_72h_t", formula: inc("reit_typo_72h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 3j", code: "%reit_72h_t", formula: (d) => pct(v(d, "incoming", "reit_typo_72h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 7j", code: "reit_sem_t", formula: inc("reit_typo_semaine"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 7j", code: "%reit_sem_t", formula: (d) => pct(v(d, "incoming", "reit_typo_semaine"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
 
   // ══════════════════════════════════════════
   // 8. RÉITÉRATION SANS TYPO
   // ══════════════════════════════════════════
   { type: "section", label: "Réitération sans distinction typologie" },
-  { type: "sub", label: "Réitération 1h",               code: "reit_1h",   formula: inc("reit_1h"),       fmt: "number" },
-  { type: "kpi", label: "% Réitération 1h",             code: "%reit_1h",  formula: (d) => pct(v(d,"incoming","reit_1h"), v(d,"incoming","recu")),       fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 1j",               code: "reit_24h",  formula: inc("reit_24h"),      fmt: "number" },
-  { type: "kpi", label: "% Réitération 1j",             code: "%reit_24h", formula: (d) => pct(v(d,"incoming","reit_24h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 3j",               code: "reit_72h",  formula: inc("reit_72h"),      fmt: "number" },
-  { type: "kpi", label: "% Réitération 3j",             code: "%reit_72h", formula: (d) => pct(v(d,"incoming","reit_72h"), v(d,"incoming","recu")),      fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
-  { type: "sub", label: "Réitération 7j",               code: "reit_sem",  formula: inc("reit_semaine"),  fmt: "number" },
-  { type: "kpi", label: "% Réitération 7j",             code: "%reit_sem", formula: (d) => pct(v(d,"incoming","reit_semaine"), v(d,"incoming","recu")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1h", code: "reit_1h", formula: inc("reit_1h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 1h", code: "%reit_1h", formula: (d) => pct(v(d, "incoming", "reit_1h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.05, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 1j", code: "reit_24h", formula: inc("reit_24h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 1j", code: "%reit_24h", formula: (d) => pct(v(d, "incoming", "reit_24h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 3j", code: "reit_72h", formula: inc("reit_72h"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 3j", code: "%reit_72h", formula: (d) => pct(v(d, "incoming", "reit_72h"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.20, colorMode: "max_inv" },
+  { type: "sub", label: "Réitération 7j", code: "reit_sem", formula: inc("reit_semaine"), fmt: "number" },
+  { type: "kpi", label: "% Réitération 7j", code: "%reit_sem", formula: (d) => pct(v(d, "incoming", "reit_semaine"), v(d, "incoming", "recu")), fmt: "percent", refMax: 0.23, colorMode: "max_inv" },
   {
     type: "kpi", label: "First Call Resolution (%FCR)", code: "%fcr",
     formula: (d) => 1 - pct(v(d, "incoming", "reit_24h"), v(d, "incoming", "traite")),
@@ -192,9 +208,9 @@ export const ROW_DEFS = [
   { type: "sub", label: "Besoin en heures", code: "besoin2", formula: (d) => v(d, "prev", "besoin2"), fmt: "decimal1" },
   { type: "sub", label: "Heures planifiées", code: "planning2", formula: (d) => v(d, "prev", "planning2"), fmt: "decimal1" },
   {
-    type: "sub", label: "Heures loguées", code: "h_loguees",
+    type: "sub", label: "Heures loguées (avec Traitement BO)", code: "h_loguees",
     formula: (d) => {
-      const hl = hLog(d);
+      const hl = hLogWithBO(d);
       return hl ? hl / 3600 : null;
     },
     fmt: "decimal1",
@@ -203,14 +219,14 @@ export const ROW_DEFS = [
     type: "sub", label: "Absentéisme en heures", code: "absenteisme",
     formula: (d) => {
       const plan = v(d, "prev", "planning2");
-      const hl = hLog(d);
+      const hl = hLogWithBO(d);
       if (!plan || !hl) return null;
-      return (hl / 3600) - plan;
+      return plan -(hl / 3600) ;
     },
     fmt: "decimal1",
   },
-  { type: "sub", label: "Sous-staff (Planning vs besoin)", code: "sous_staff", formula: (d) => v(d, "prev", "sous_staff") ?? null, fmt: "decimal1" },
-  { type: "sub", label: "Sur-staff (Planning vs besoin)",  code: "sur_staff",  formula: (d) => v(d, "prev", "sur_staff") ?? null, fmt: "decimal1" },
+  // { type: "sub", label: "Sous-staff (Planning vs besoin)", code: "sous_staff", formula: (d) => v(d, "prev", "sous_staff") ?? null, fmt: "decimal1" },
+  // { type: "sub", label: "Sur-staff (Planning vs besoin)", code: "sur_staff", formula: (d) => v(d, "prev", "sur_staff") ?? null, fmt: "decimal1" },
   {
     type: "kpi", label: "Taux de couverture", code: "tx_couv",
     formula: (d) => pct(v(d, "prev", "planning2"), v(d, "prev", "besoin2")),
@@ -243,20 +259,26 @@ export const ROW_DEFS = [
   {
     type: "sub", label: "ETP Absents", code: "etp_abs",
     formula: (d) => {
-      const pres = hLog(d);
-      const plan = v(d, "prev", "planning2");
-      if (!pres || !plan) return null;
-      return (pres / 3600) / 8 - plan / 8;
+      const hl = hLog(d);
+      const p = v(d, "prev", "planning2");
+      const etpPlan =  p ? p / 8 : null;
+      const etpPresent =  hl ? (hl / 3600) / 8 : null;
+      if (!etpPresent || !etpPlan) return null;
+      return etpPlan - etpPresent  ;
     },
     fmt: "decimal2",
   },
   {
     type: "kpi", label: "Taux d'absence", code: "tx_abs",
     formula: (d) => {
-      const pres = hLog(d);
+      const hl = hLog(d);
       const plan = v(d, "prev", "planning2");
-      if (!pres || !plan) return null;
-      return ((pres / 3600) - plan) / plan;
+      const etpPlan =  plan  ? plan / 8 : null;
+      const etpPresent =  hl ? (hl / 3600) / 8 : null;
+      const etpAbsent = etpPlan && etpPresent ? etpPlan - etpPresent : null;
+
+      if (!etpPlan || !etpAbsent) return null;
+      return etpAbsent / etpPlan;
     },
     fmt: "percent", refMax: 0.08, refMin: 0.12, colorMode: "range",
   },
